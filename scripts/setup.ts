@@ -11,12 +11,9 @@
 
 import fs from "fs";
 import path from "path";
-import https from "https";
 import os from "os";
 import { fileURLToPath } from "url";
-
-// self-signed certificate 에러 우회를 위한 설정 주입
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+import { downloadFile } from "../src/utils/downloadHelper.js";
 
 // 각 리소스를 사용자 홈 디렉토리에 저장 (권한 문제 해결)
 const GASIO_HOME = path.join(os.homedir(), ".gasio");
@@ -50,51 +47,6 @@ const DOWNLOADS = [
   },
 ];
 
-function download(url: string, dest: string, name: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (fs.existsSync(dest)) {
-      process.stderr.write(`[setup] 이미 존재하여 건너뜀 [${name}]: ${path.basename(dest)}\n`);
-      resolve();
-      return;
-    }
-
-    process.stderr.write(`[setup] 다운로드 중 [${name}]: ${url}\n`);
-    const file = fs.createWriteStream(dest);
-
-    const request = (targetUrl: string) => {
-      https.get(targetUrl, (res) => {
-        // HTTP 리다이렉트 처리 (301, 302)
-        if (res.statusCode === 301 || res.statusCode === 302) {
-          const location = res.headers.location;
-          if (!location) {
-            reject(new Error(`리다이렉트 주소를 찾지 못함: ${targetUrl}`));
-            return;
-          }
-          request(location);
-          return;
-        }
-
-        if (res.statusCode !== 200) {
-          reject(new Error(`HTTP 오류 ${res.statusCode}: ${targetUrl}`));
-          return;
-        }
-
-        res.pipe(file);
-        file.on("finish", () => {
-          file.close();
-          const sizeMB = (fs.statSync(dest).size / 1024 / 1024).toFixed(1);
-          process.stderr.write(`[setup] 완료 [${name}]: ${path.basename(dest)} (${sizeMB}MB)\n`);
-          resolve();
-        });
-      }).on("error", (err: Error) => {
-        fs.unlink(dest, () => { }); // 실패한 임시 파일 삭제
-        reject(err);
-      });
-    };
-
-    request(url);
-  });
-}
 
 export async function runSetup() {
   process.stderr.write("[setup] 오프라인 Tesseract 및 ONNX AI 모델 다운로드 시작...\n");
@@ -107,11 +59,10 @@ export async function runSetup() {
     fs.mkdirSync(MODELS_DIR, { recursive: true });
   }
 
-  // 순차 다운로드 실행
   for (const item of DOWNLOADS) {
     const dest = path.join(item.dir, item.filename);
     try {
-      await download(item.url, dest, item.name);
+      await downloadFile(item.url, dest, item.name);
     } catch (err) {
       process.stderr.write(
         `[setup] 오류: [${item.name}] 다운로드 중 에러 발생 - ${err instanceof Error ? err.message : String(err)}\n`

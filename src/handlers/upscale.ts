@@ -12,6 +12,12 @@ import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { validatePath, assertFileExists, ensureOutputDir, toErrorResult } from "../security.js";
 import { logger } from "../logger.js";
+import { downloadFile } from "../utils/downloadHelper.js";
+
+const ONNX_MODEL_URLS: Record<string, string> = {
+  "super-resolution.onnx": "https://github.com/onnx/models/raw/main/validated/vision/super_resolution/sub_pixel_cnn_2016/model/super-resolution-10.onnx",
+  "realesrgan-x4.onnx": "https://huggingface.co/AXERA-TECH/Real-ESRGAN/resolve/main/onnx/realesrgan-x4.onnx",
+};
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WORKER_PATH = path.resolve(__dirname, "../../scripts/upscale-worker.js");
@@ -47,22 +53,29 @@ export async function handleImageUpscaler(args: UpscaleImgArgs): Promise<ToolRes
     const hasModel = fs.existsSync(modelPath);
 
     if (!hasModel) {
-      const errorMsg = `화질 개선 AI를 실행할 수 없습니다. 원인: AI 모델 파일 누락 (${modelFilename})\n\n` +
-        `해결책:\n` +
-        `AI 기능을 사용하려면 오프라인 모델 파일을 다운로드해야 합니다.\n` +
-        `터미널에서 다음 명령어를 실행하여 셋업을 완료해주세요:\n` +
-        `  npx @gasio/mcp-server setup\n\n` +
-        `오류가 지속될 경우 시스템 환경 및 패키지 설치 상태를 확인해주세요.`;
-      logger.error(`[upscale] ${errorMsg}`);
-      return {
-        isError: true,
-        content: [
-          {
-            type: "text",
-            text: errorMsg
-          }
-        ]
-      };
+      logger.info(`누락된 ONNX AI 모델 발견: ${modelFilename}. 자동 다운로드를 시작합니다.`);
+      const url = ONNX_MODEL_URLS[modelFilename];
+      if (url) {
+        try {
+          const modelName = modelType === "realesrgan" ? "RealESRGAN (4x) AI 모델" : "Super Resolution (2x) AI 모델";
+          await downloadFile(url, modelPath, modelName);
+        } catch (downloadError) {
+          const errorMsg = `화질 개선 AI 모델 파일(${modelFilename}) 자동 다운로드 실패: ${downloadError instanceof Error ? downloadError.message : String(downloadError)}\n\n` +
+            `해결책:\n` +
+            `인터넷 환경을 점검하거나, 터미널에서 수동으로 셋업을 완료해주세요:\n` +
+            `  npx @gasio/mcp-server setup`;
+          logger.error(`[upscale] ${errorMsg}`);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: errorMsg
+              }
+            ]
+          };
+        }
+      }
     }
 
     try {
