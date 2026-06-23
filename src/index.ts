@@ -35,16 +35,61 @@ import { handleCheckSetup } from "./handlers/checksetup.js";
 
 // 셋업 연동을 위한 가져오기
 import { runSetup } from "../scripts/setup.js";
+import fs from "fs";
+import path from "path";
+import os from "os";
 
 // 사용 한도 및 웹 방문 검증 미들웨어 연동
 import { verifyUsageAndSession } from "./session.js";
 
-// 공통 세션 제어 래퍼 미들웨어
+// 3중 안전장치: 필수 리소스 누락 시 실시간 자동 설치 (Self-healing)
+async function ensureResourcesReady(toolName: string) {
+  const home = os.homedir();
+  const engPath = path.join(home, ".gasio", "tesseract", "eng.traineddata");
+  const korPath = path.join(home, ".gasio", "tesseract", "kor.traineddata");
+  const srPath = path.join(home, ".gasio", "models", "super-resolution.onnx");
+  const realEsrganPath = path.join(home, ".gasio", "models", "realesrgan-x4.onnx");
+
+  let needsSetup = false;
+  if (toolName === "gasio_image_to_text_ocr") {
+    needsSetup = !fs.existsSync(engPath) || !fs.existsSync(korPath);
+  } else if (toolName === "gasio_image_upscaler") {
+    needsSetup = !fs.existsSync(srPath) || !fs.existsSync(realEsrganPath);
+  }
+
+  if (needsSetup) {
+    logger.info(`[Auto Setup] '${toolName}' 실행을 위해 필요한 AI 리소스가 누락되어 실시간 자동 다운로드를 시작합니다 (수초 소요)...`);
+    try {
+      await runSetup();
+      logger.info(`[Auto Setup] ✅ AI 리소스 자동 다운로드 완료!`);
+    } catch (err) {
+      logger.error(`[Auto Setup] ❌ 자동 다운로드 실패: ${err instanceof Error ? err.message : String(err)}`);
+      throw new Error(`필수 AI 리소스가 누락되었으며 자동 복구에 실패했습니다. 터미널에서 'mcp-server setup'을 수동으로 수행해 주세요.`);
+    }
+  }
+}
+
+// 공통 세션 제어 및 셋업 가드 래퍼 미들웨어
 function withSessionGuard<T extends Record<string, any>>(
   toolName: string,
   handler: (args: T) => Promise<any>
 ) {
   return async (args: T) => {
+    // 3중 안전장치: 필수 리소스 자동 검사 및 복구 실행
+    try {
+      await ensureResourcesReady(toolName);
+    } catch (err: any) {
+      return {
+        isError: true,
+        content: [
+          {
+            type: "text",
+            text: err.message || "필수 AI 리소스가 누락되어 도구를 기동할 수 없습니다."
+          }
+        ]
+      };
+    }
+
     const sessionCheck = await verifyUsageAndSession(toolName, (msg) => {
       // stderr 로그 출력을 통해 MCP Stdio 채널의 오염 없이 안전하게 정보 전달
       logger.info(msg);
