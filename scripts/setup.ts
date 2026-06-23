@@ -67,8 +67,6 @@ export async function runSetup() {
       process.stderr.write(
         `[setup] 오류: [${item.name}] 다운로드 중 에러 발생 - ${err instanceof Error ? err.message : String(err)}\n`
       );
-      // 필수적인 모델 에러가 아니면 계속 진행할 수 있게 하거나, 종료
-      // Tesseract와 Super Resolution은 필수로 두되, 대용량 RealESRGAN이 혹시 실패하더라도 Fallback이 있으므로 경고로 처리하는 것을 검토
       if (item.filename === "realesrgan-x4.onnx") {
         process.stderr.write("[setup] 경고: RealESRGAN 모델 다운로드 실패. upscale 실행 시 Jimp 보간법으로 Fallback 됩니다.\n");
       } else {
