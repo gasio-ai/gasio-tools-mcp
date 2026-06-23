@@ -1,0 +1,15 @@
+# AI 모델 파일 (용량이 크고 npm run setup으로 별도 다운로드)
+resources/models/
+resources/tesseract/
+resources/frames/
+
+# 개발 전용
+src/
+scripts/
+*.ts
+tsconfig.json
+.gitignore
+
+# 빌드 중간 산출물
+dist/**/*.map
+dist/**/*.d.ts

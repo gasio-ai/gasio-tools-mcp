@@ -1,0 +1,81 @@
+{
+  "name": "@gasio/mcp-server",
+  "version": "1.0.0",
+  "description": "Gasio Tools 14종 MCP 서버 - 100% 로컬 오프라인 미디어 처리 도구 (배경 제거, 화질 개선, OCR, QR코드, SVG변환, GIF변환 등)",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "gasio",
+    "local",
+    "offline",
+    "image",
+    "video",
+    "ocr",
+    "qrcode",
+    "css",
+    "background-removal",
+    "upscale",
+    "favicon",
+    "exif",
+    "inpaint",
+    "svg",
+    "gif",
+    "claude",
+    "ai-agent"
+  ],
+  "author": "Gasio Tools",
+  "license": "MIT",
+  "homepage": "https://tools.gasio.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kimhoecheon-cmd/gasio-tools-site.git",
+    "directory": "gasio-mcp-server"
+  },
+  "bugs": {
+    "url": "https://github.com/kimhoecheon-cmd/gasio-tools-site/issues"
+  },
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "bin": {
+    "gasio-mcp": "./dist/src/index.js",
+    "gasio-mcp-setup": "./dist/scripts/setup.js"
+  },
+  "files": [
+    "dist/src",
+    "dist/scripts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/index.js",
+    "dev": "tsc --watch",
+    "setup": "node dist/scripts/setup.js",
+    "prepublishOnly": "npm run build",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@imgly/background-removal-node": "^1.4.5",
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "ffmpeg-static": "^5.2.0",
+    "fluent-ffmpeg": "^2.1.3",
+    "jimp": "^1.6.0",
+    "jszip": "^3.10.1",
+    "onnxruntime-node": "^1.27.0",
+    "opencv-wasm": "^4.3.0-10",
+    "piexifjs": "^1.0.6",
+    "potrace": "^2.1.8",
+    "qrcode": "^1.5.4",
+    "tesseract.js": "^5.1.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.27",
+    "@types/node": "^22.0.0",
+    "@types/potrace": "^2.1.4",
+    "@types/qrcode": "^1.5.5",
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
