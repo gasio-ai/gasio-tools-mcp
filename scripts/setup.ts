@@ -129,6 +129,61 @@ export async function runSetup() {
   process.stderr.write("\n[setup] 모든 오프라인 모델 및 AI 리소스 셋업 완료!\n");
   process.stderr.write(`- Tesseract 저장 경로: ${TESSDATA_DIR}\n`);
   process.stderr.write(`- ONNX 모델 저장 경로: ${MODELS_DIR}\n`);
+
+  // Claude Desktop 자동 등록 실행
+  setupClaudeDesktop();
+}
+
+function setupClaudeDesktop() {
+  process.stderr.write("\n[setup] Claude Desktop 설정에 MCP 서버 등록 중...\n");
+
+  let configPath = "";
+  const home = os.homedir();
+
+  if (os.platform() === "darwin") {
+    configPath = path.join(home, "Library/Application Support/Claude/claude_desktop_config.json");
+  } else if (os.platform() === "win32") {
+    const appData = process.env.APPDATA || path.join(home, "AppData", "Roaming");
+    configPath = path.join(appData, "Claude", "claude_desktop_config.json");
+  } else {
+    process.stderr.write("[setup] 지원되지 않는 OS입니다. Claude Desktop 설정을 수동으로 진행해 주세요.\n");
+    return;
+  }
+
+  const configDir = path.dirname(configPath);
+
+  try {
+    if (!fs.existsSync(configDir)) {
+      fs.mkdirSync(configDir, { recursive: true });
+    }
+
+    let config: any = { mcpServers: {} };
+    if (fs.existsSync(configPath)) {
+      const raw = fs.readFileSync(configPath, "utf-8").trim();
+      if (raw) {
+        try {
+          config = JSON.parse(raw);
+        } catch (e) {
+          process.stderr.write(`[setup] 기존 Claude 설정 파일 파싱 실패, 초기화합니다: ${e instanceof Error ? e.message : String(e)}\n`);
+        }
+      }
+    }
+
+    if (!config.mcpServers) {
+      config.mcpServers = {};
+    }
+
+    config.mcpServers["gasio-tools"] = {
+      command: "npx",
+      args: ["-y", "@gasio/mcp-server@latest"]
+    };
+
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf-8");
+    process.stderr.write(`[setup] ✅ Claude Desktop 설정에 'gasio-tools' MCP 서버 자동 등록 완료!\n`);
+    process.stderr.write(`- 설정 파일 경로: ${configPath}\n`);
+  } catch (err) {
+    process.stderr.write(`[setup] 경고: Claude Desktop 설정 자동 주입 중 실패하였습니다 - ${err instanceof Error ? err.message : String(err)}\n`);
+  }
 }
 
 // 직접 스크립트 실행 시 호출
