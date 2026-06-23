@@ -87,7 +87,7 @@ function download(url: string, dest: string, name: string): Promise<void> {
           resolve();
         });
       }).on("error", (err: Error) => {
-        fs.unlink(dest, () => {}); // 실패한 임시 파일 삭제
+        fs.unlink(dest, () => { }); // 실패한 임시 파일 삭제
         reject(err);
       });
     };
@@ -182,7 +182,7 @@ function setupClaudeDesktop() {
     process.stderr.write(`[setup] ✅ Claude Desktop 설정에 'gasio-tools' MCP 서버 자동 등록 완료!\n`);
     process.stderr.write(`- 설정 파일 경로: ${configPath}\n`);
   } catch (err) {
-    process.stderr.write(`[setup] 경고: Claude Desktop 설정 자동 주입 중 실패하였습니다 - ${err instanceof Error ? err.message : String(err)}\n`);
+    process.stderr.write(`[setup] 경고:Claude Desktop 설정 자동 주입 중 실패하였습니다 - ${err instanceof Error ? err.message : String(err)}\n`);
   }
 }
 

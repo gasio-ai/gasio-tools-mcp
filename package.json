@@ -1,6 +1,6 @@
 {
   "name": "@gasio/mcp-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Gasio Tools 14종 MCP 서버 - 100% 로컬 오프라인 미디어 처리 도구 (배경 제거, 화질 개선, OCR, QR코드, SVG변환, GIF변환 등)",
   "keywords": [
     "mcp",
@@ -37,7 +37,7 @@
   "type": "module",
   "main": "./dist/src/index.js",
   "bin": {
-    "gasio-mcp": "./dist/src/index.js",
+    "mcp-server": "./dist/src/index.js",
     "gasio-mcp-setup": "./dist/scripts/setup.js"
   },
   "files": [
