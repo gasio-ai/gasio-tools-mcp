@@ -1,6 +1,6 @@
 {
   "name": "@gasio/mcp-server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Gasio Tools 14종 MCP 서버 - 100% 로컬 오프라인 미디어 처리 도구 (배경 제거, 화질 개선, OCR, QR코드, SVG변환, GIF변환 등)",
   "keywords": [
     "mcp",
@@ -46,7 +46,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && chmod +x dist/src/index.js dist/scripts/setup.js",
     "start": "node dist/src/index.js",
     "dev": "tsc --watch",
     "setup": "node dist/scripts/setup.js",
