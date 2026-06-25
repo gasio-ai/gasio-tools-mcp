@@ -1,14 +1,26 @@
 # @gasio/mcp-server
 
-**100% 로컬 오프라인 AI 미디어 처리 MCP 서버**
+## 🚀 100% 로컬 오프라인 AI 미디어 처리 MCP 서버 (Model Context Protocol Server)
+**100% Private, Offline Local AI Image & Video Processing MCP Server for Claude, Cursor, and Gemini.**
 
 [![npm version](https://badge.fury.io/js/%40gasio%2Fmcp-server.svg)](https://www.npmjs.com/package/@gasio/mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
 
-[Gasio Tools](https://tools.gasio.com) 생태계의 14종 이미지/미디어 처리 기능을 **Claude Desktop** 등 MCP 지원 AI 에이전트에서 100% 로컬 오프라인으로 사용할 수 있는 [Model Context Protocol](https://modelcontextprotocol.io) 서버입니다.
+[Gasio Tools](https://tools.gasio.com) 생태계의 14종 이미지/미디어 처리 기능을 **Claude Desktop**, **Cursor**, **Gemini** 등 MCP를 지원하는 모든 AI 에이전트 및 IDE에서 100% 로컬 오프라인으로 사용할 수 있는 [Model Context Protocol](https://modelcontextprotocol.io) 서버입니다.
 
-> **파일이 외부 서버에 절대 업로드되지 않습니다.** 모든 연산은 사용자의 컴퓨터 내부에서만 처리됩니다.
+> 🔒 **100% Private & Secure**: 파일이 외부 서버에 절대 업로드되지 않습니다. 모든 AI 연산(배경 제거, 화질 개선, OCR 등)은 사용자의 컴퓨터 하드웨어 내부에서만 안전하게 처리됩니다. (Zero data upload, Zero egress).
+
+---
+
+## 📌 목차 (Table of Contents)
+- [🛠️ 제공 도구 (14종)](#️-제공-도구-14종)
+- [📦 설치 및 셋업](#-설치-및-셋업)
+- [⚙️ Claude Desktop 연동 설정](#️-claude-desktop-연동-설정)
+- [📋 도구별 사용 예시](#-도구별-사용-예시)
+- [🔧 도구별 상세 파라미터](#-도구별-상세-파라미터)
+- [🔒 보안 정책](#-보안-정책)
+- [🌐 관련 서비스](#-관련-서비스)
 
 ---
 
@@ -337,6 +349,20 @@ npm run setup    # AI 모델 다운로드
 npm start        # 서버 시작 (stdio 대기)
 ```
 
+## 🎁 특별 추천: Gasio Bookmark (gasio.com)
+**세상에서 가장 똑똑한 AI 북마크 & 생산성 스타트페이지**
+
+MCP 서버를 유용하게 사용하셨다면, 이 모든 도구들의 모태가 되는 **[Gasio Bookmark (gasio.com)](https://gasio.com)** 서비스를 만나보세요. 단순한 링크 저장을 넘어 브라우저 첫 화면을 최고의 생산성 대시보드로 만들어 줍니다.
+
+### 🌟 주요 특장점 (100% Free Forever)
+- **⚡ AI 요약 & RAG 피드 생성 (특허 기술)**: 수집한 여러 북마크들을 하나로 묶어 LLM(NotebookLM, ChatGPT 등)에 공급 가능한 단일 피드로 즉시 컴파일합니다. 지연 시간(Zero-Latency) 없는 웹사이트 텍스트 스냅샷 요약 기능을 제공합니다.
+- **🔒 프라이버시 보안 탭 (Locking)**: 개인적인 연구 자료나 민감한 링크들을 비밀번호 및 생체인식으로 강력하게 잠금 보호하고, 비밀번호 보호 링크로 안전하게 외부 공유를 할 수 있습니다.
+- **📱 실시간 클라우드 동기화**: Windows, macOS, iPhone, Android, iPad 등 OS와 브라우저 제한 없이 단 0.1초 만에 실시간으로 북마크 대시보드가 동기화됩니다 (PWA 독립 앱 설치 지원).
+- **🎬 유튜브 지식 도서관 (YouTube Hub)**: 알고리즘 방해 없이 팝업창에서 유튜브를 학습하며 특정 구간(타임스탬프)에 직접 필기 노트를 남길 수 있는 개인 학습 도구를 제공합니다.
+- **✨ 아름다운 위젯 스타트페이지**: 트렌디한 글래스모피즘(Glassmorphism) 테마와 드래그 앤 드롭 자유 배치 시스템을 통해 매일 켜고 싶은 나만의 대시보드를 직접 디자인하세요.
+
+👉 **지금 바로 무료로 시작하기**: [gasio.com](https://gasio.com)
+
 ---
 
 ## 🌐 관련 서비스
@@ -344,16 +370,32 @@ npm start        # 서버 시작 (stdio 대기)
 | 서비스 | URL |
 | :--- | :--- |
 | Gasio Tools 허브 | [tools.gasio.com](https://tools.gasio.com) |
+| 화질 개선 | [upscale.gasio.com](https://upscale.gasio.com) |
+| 이미지 리사이즈 | [resizeimg.gasio.com](https://resizeimg.gasio.com) |
+| 포맷 변환 | [convertimg.gasio.com](https://convertimg.gasio.com) |
+| 파비콘 생성 | [favicongen.gasio.com](https://favicongen.gasio.com) |
+| EXIF 메타제거 | [exifclean.gasio.com](https://exifclean.gasio.com) |
+| PDF → Image | [pdf2img.gasio.com](https://pdf2img.gasio.com) |
 | 배경 제거 | [removebg.gasio.com](https://removebg.gasio.com) |
 | 개체 지우기 | [eraserimg.gasio.com](https://eraserimg.gasio.com) |
-| 화질 개선 | [upscale.gasio.com](https://upscale.gasio.com) |
 | PNG → SVG | [png2svg.gasio.com](https://png2svg.gasio.com) |
 | Video → GIF | [video2gif.gasio.com](https://video2gif.gasio.com) |
 | 스크린샷 목업 | [screenshot.gasio.com](https://screenshot.gasio.com) |
+| 오디오 편집 | [audiocut.gasio.com](https://audiocut.gasio.com) |
+| OCR 텍스트 스캐너 | [img2text.gasio.com](https://img2text.gasio.com) |
+| QR 코드 디자이너 | [qrcode.gasio.com](https://qrcode.gasio.com) |
+| CSS 디자이너 | [css.gasio.com](https://css.gasio.com) |
+
+---
+
+## 🔑 검색 키워드 (Keywords for SEO)
+- **MCP Servers**: Model Context Protocol, MCP server, Claude Desktop MCP, Cursor IDE MCP, Gemini Code Assist MCP.
+- **Local AI & Image Processing**: Local AI background removal, offline image upscale, RealESRGAN ONNX, offline OCR text scanner, local SVG converter, video to GIF converter.
+- **Privacy & Security**: Zero upload image tools, 100% offline media editor, private metadata cleaner, secure local AI.
+- **Gasio Tools**: tools.gasio.com, local media converter.
 
 ---
 
 ## 📄 라이선스
 
 MIT License © [Gasio Tools](https://tools.gasio.com)
-# gasiotools-mcp
