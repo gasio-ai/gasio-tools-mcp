@@ -13,7 +13,7 @@ fi
 echo "🔍 git status"
 git status
 
-# 변경사항 스테이징
+# 변경사항 스테이징 
 echo "➕ git add ."
 git add .
 
