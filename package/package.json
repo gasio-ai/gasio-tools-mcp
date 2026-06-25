@@ -28,11 +28,11 @@
   "homepage": "https://tools.gasio.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kimhoecheon-cmd/gasio-tools-site.git",
+    "url": "https://github.com/gasio-ai/gasio-tools-site.git",
     "directory": "gasio-mcp-server"
   },
   "bugs": {
-    "url": "https://github.com/kimhoecheon-cmd/gasio-tools-site/issues"
+    "url": "https://github.com/gasio-ai/gasio-tools-site/issues"
   },
   "type": "module",
   "main": "./dist/src/index.js",
